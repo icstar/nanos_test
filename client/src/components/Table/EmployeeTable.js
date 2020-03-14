@@ -1,0 +1,103 @@
+import React from "react";
+import PropTypes from "prop-types";
+// @material-ui/core components
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import { Link } from 'react-router-dom';
+
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import Close from "@material-ui/icons/Close";
+
+import agent from '../../agent';
+import {
+  ADMIN_DEL_USER  
+} from '../../constants/actionTypes';
+
+// core components
+import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
+
+const useStyles = makeStyles(styles);
+
+let userDel = (user_id) => {
+  const result = window.confirm("Are you sure?");
+  if(result){
+    agent.Admin.delEmployee(user_id);
+  }
+}
+
+export default function CustomTable(props) {
+  const classes = useStyles();
+
+  const { tableHead, tableData, tableHeaderColor } = props;
+
+  return (
+    <div className={classes.tableResponsive}>
+      <Table className={classes.table}>
+        {tableHead !== undefined ? (
+          <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
+            <TableRow className={classes.tableHeadRow}>
+              {tableHead.map((prop, key) => {
+                return (
+                  <TableCell
+                    className={classes.tableCell + " " + classes.tableHeadCell}
+                    key={key}
+                  >
+                    {prop}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+        ) : null}
+        <TableBody>
+          {tableData.length > 0 ? (tableData.map((prop, key) => {
+            return (
+              <TableRow key={key} className={classes.tableBodyRow}>
+                <TableCell className={classes.tableCell}>
+                  {key + 1}
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  <Link to={`/lists/${prop.id}`}><span style={{color:"#1e76f9", fontFamily:"Arial"}}>{prop.name}</span></Link>
+
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  {prop.goal}
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  {prop.total_budget}
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  {prop.status}
+                </TableCell>
+
+                {/* <TableCell>
+                <Tooltip id="tooltip-top-start" title="Remove" placement="top" classes={{ tooltip: classes.tooltip }}>
+                  <IconButton aria-label="Close" className={classes.tableActionButton} onClick={() => {userDel(prop._id);}}><Close className={classes.tableActionButtonIcon + " " + classes.close}/></IconButton>
+                </Tooltip></TableCell> */}
+              </TableRow>
+            );
+          })) : null}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+CustomTable.defaultProps = {
+  tableHeaderColor: "gray"
+};
+
+CustomTable.propTypes = {
+  tableHeaderColor: PropTypes.oneOf([
+    "warning",
+    "primary",
+    "danger",
+    "success"
+  ]),
+  tableHead: PropTypes.arrayOf(PropTypes.string)
+};
