@@ -20,5 +20,5 @@ Testing site and admin to show campaigns
 
     * Implemented 2 APIs only but other api templates were not removed because they may be used later with other functions
 
-- I added the data.json to the server folder as a monogo database dump file.
+- Added the data.json to the server folder as a monogo database dump file.
 
